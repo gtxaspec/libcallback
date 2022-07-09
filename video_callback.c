@@ -94,7 +94,7 @@ static uint32_t video_encode_capture(struct frames_st *frames) {
                 vid_format.fmt.pix.height = 1080;
     }
 
-    vid_format.fmt.pix.pixelformat = V4L2_PIX_FMT_H264;
+    vid_format.fmt.pix.pixelformat = V4L2_PIX_FMT_HEVC;
     vid_format.fmt.pix.sizeimage = 0;
     vid_format.fmt.pix.field = V4L2_FIELD_NONE;
     vid_format.fmt.pix.bytesperline = 0;
@@ -155,7 +155,7 @@ static uint32_t video_encode_capture1(struct frames_st *frames) {
                 vid_format.fmt.pix.height = 320;
     }
 
-    vid_format.fmt.pix.pixelformat = V4L2_PIX_FMT_H264;
+    vid_format.fmt.pix.pixelformat = V4L2_PIX_FMT_HEVC;
     vid_format.fmt.pix.sizeimage = 0;
     vid_format.fmt.pix.field = V4L2_FIELD_NONE;
     vid_format.fmt.pix.bytesperline = 0;
