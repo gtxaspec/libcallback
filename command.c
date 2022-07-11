@@ -21,6 +21,7 @@ extern char *MotorMove(int fd, char *tokenPtr);
 extern char *WaitMotion(int fd, char *tokenPtr);
 extern char *IrLed(int fd, char *tokenPtr);
 extern char *AudioPlay(int fd, char *tokenPtr);
+extern char *CurlDebug(int fd, char *tokenPtr);
 extern char *mp4Write(int fd, char *tokenPtr);
 extern char *imp_Control(int fd, char *tokenPtr);
 
@@ -37,6 +38,7 @@ struct CommandTableSt CommandTable[] = {
   { "waitMotion", &WaitMotion },
   { "irled",      &IrLed },
   { "aplay",      &AudioPlay },
+  { "curlDebug",  &CurlDebug },
   { "mp4write",      &mp4Write },
   { "imp_control",      &imp_Control },
 

@@ -95,13 +95,13 @@ char *AudioPlay(int fd, char *tokenPtr) {
 
   if(AudioPlayFd >= 0) {
     fprintf(stderr, "[command] aplay err: Previous file is still playing. %d %d\n", AudioPlayFd, fd);
-    return "error";
+    return "[command] [audio_play.c] error";
   }
 
   char *p = strtok_r(NULL, " \t\r\n", &tokenPtr);
   if(!p) {
     fprintf(stderr, "[command] aplay err: usage : aplay <wave file> [<volume>]\n");
-    return "error";
+    return "[command] [audio_play.c] error";
   }
   strncpy(waveFile, p, 255);
 
@@ -119,7 +119,7 @@ static void __attribute ((constructor)) AudioPlayInit(void) {
   pthread_mutex_lock(&AudioPlayMutex);
   pthread_t thread;
   if(pthread_create(&thread, NULL, AudioPlayThread, NULL)) {
-    fprintf(stderr, "pthread_create error\n");
+    fprintf(stderr, "[command] [audio_play.c] pthread_create error\n");
     pthread_mutex_unlock(&AudioPlayMutex);
     return;
   }

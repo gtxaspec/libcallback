@@ -5,6 +5,8 @@
 #include <stdint.h>
 
 const char *enableMotorStop="/opt/wz_mini/tmp/.ms";
+const char *product_T20="/opt/wz_mini/tmp/.T20";
+
 static uint32_t (*real_local_sdk_motor_init)(void);
 
 local_sdk_motor_init(void) {
@@ -18,5 +20,9 @@ local_sdk_motor_init(void) {
 }
 
 static void __attribute ((constructor)) motor_stop_init(void) {
-	real_local_sdk_motor_init = dlsym(dlopen("/system/lib/liblocalsdk_motor.so", RTLD_LAZY), "local_sdk_motor_init");
+	if( access( product_T20, F_OK ) != -1 ) {
+		real_local_sdk_motor_init = dlsym(dlopen("/system/lib/liblocalsdk.so", RTLD_LAZY), "sdk_motor_init");
+	} else {
+		real_local_sdk_motor_init = dlsym(dlopen("/system/lib/liblocalsdk_motor.so", RTLD_LAZY), "local_sdk_motor_init");
+	}
 }

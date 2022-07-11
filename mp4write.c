@@ -8,7 +8,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 static int (*original_mp4write_start_handler)(void *handler, char *file, void *config);
+
 
 static int mp4WriteEnable = 0;
 
@@ -18,7 +20,7 @@ char *mp4Write(int fd, char *tokenPtr) {
   if(!p) return mp4WriteEnable ? "on" : "off";
   if(!strcmp(p, "on")) {
     mp4WriteEnable = 1;
-    fprintf(stderr, "[command] mp4write on\n", p);
+    fprintf(stderr, "[command] [mp4write.c] mp4write on\n", p);
     return "ok";
   }
   if(!strcmp(p, "off")) {
@@ -26,7 +28,7 @@ char *mp4Write(int fd, char *tokenPtr) {
     fprintf(stderr, "[command] mp4write off\n", p);
     return "ok";
   }
-  return "error in mp4write.c";
+  return "error in [mp4write.c]";
 }
 
 
@@ -38,19 +40,19 @@ if(mp4WriteEnable) {
     folder = "/media/mmc/record/tmp";
     struct stat sb;
 
-   printf("[command] mp4write.c: checking for temporary record directory\n");
+   printf("[command] [mp4write.c]: checking for temporary record directory\n");
 
     if (stat(folder, &sb) == 0 && S_ISDIR(sb.st_mode)) {
-    printf("[command] mp4write.c: temporary directory exists.\n");
+    printf("[command] [mp4write.c]: temporary directory exists.\n");
     } else {
-      printf("[command] mp4write.c: directory missing, creating directory\n");
+      printf("[command] [mp4write.c]: directory missing, creating directory\n");
       mkdir("/media/mmc/record/tmp", 0700);
     }
 
-  printf("mp4write.c: filename: %s\n", file);
+  printf("[command] [mp4write.c]: filename: %s\n", file);
 
   if(!strncmp(file, "/tmp/alarm_", 11)) {
-  printf("mp4write.c: alarm, skipping\n", file);
+  printf("[command] [mp4write.c]: alarm, skipping\n", file);
   return (original_mp4write_start_handler)(handler, file, config);
   } else if(!strncmp(file, "/tmp/", 5)) {
     char buf[64];

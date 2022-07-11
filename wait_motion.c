@@ -6,6 +6,7 @@
 #include <pthread.h>
 #include <errno.h>
 #include <math.h>
+#include <unistd.h>
 
 extern void CommandResponse(int fd, const char *res);
 extern int local_sdk_motor_get_position(float *step,float *angle);
