@@ -379,10 +379,10 @@ const char *product_T20_platform="/opt/wz_mini/tmp/.T20";
 	//T20
 	if(ch == 0) {
 		video_capture[ch].device = "/dev/video6";
-        	fprintf(stderr, "[command] v4l2_device_path = %s\n", video_capture[ch].device);
+        	fprintf(stderr, "[command] [video_callback.c] v4l2_device_path = %s\n", video_capture[ch].device);
 	} else if(ch == 1) {
 		video_capture[ch].device = "/dev/video7";
-        	fprintf(stderr, "[command] v4l2_device_path = %s\n", video_capture[ch].device);
+        	fprintf(stderr, "[command] [video_callback.c] v4l2_device_path = %s\n", video_capture[ch].device);
 	}
     } else {
 	//T31
@@ -392,27 +392,27 @@ const char *product_T20_platform="/opt/wz_mini/tmp/.T20";
 
 		if( access( productDB, F_OK ) == 0 ) {
         	        /* doorbell resolution */
-                	printf("[command] video product 1728x1296\n");
+                	printf("[command] [video_callback.c] video product 1728x1296\n");
 	                video_capture[ch].width = 1728;
         	        video_capture[ch].height = 1296;
 		} else {
         	        /* v3 and panv2 res */
-	                printf("[command] video product 1920x1080\n");
+	                printf("[command] [video_callback.c] video product 1920x1080\n");
         	        video_capture[ch].width = 1920;
                 	video_capture[ch].height = 1080;
 		}
 	} else if(ch == 1) {
 		video_capture[ch].device = "/dev/video2";
-        	fprintf(stderr, "[command] v4l2_device_path = %s\n", video_capture[ch].device);
+        	fprintf(stderr, "[command] [video_callback.c] v4l2_device_path = %s\n", video_capture[ch].device);
 
 		if( access( productDB, F_OK ) == 0 ) {
 	       	        /* doorbell resolution */
-                	printf("[command] video product 640x480\n");
+                	printf("[command] [video_callback.c] video product 640x480\n");
 	                video_capture[ch].width = 640;
         	        video_capture[ch].height = 480;
 		} else {
         	        /* v3 and panv2 res */
-	                printf("[command] video product 640x360\n");
+	                printf("[command] [video_callback.c] video product 640x360\n");
         	        video_capture[ch].width = 640;
                 	video_capture[ch].height = 360;
 		}

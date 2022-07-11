@@ -22,7 +22,6 @@ typedef struct {
   int chnCnt;  // Number of channels supported.
 } IMPAudioIOAttr;
 
-
 // attribute of the audio input device.
 extern int IMP_AI_SetPubAttr(int audioDevId, IMPAudioIOAttr *attr);
 extern int IMP_AI_GetPubAttr(int audioDevId, IMPAudioIOAttr *attr);
@@ -121,7 +120,7 @@ static char *AutoGainControl(char *tokenPtr) {
 
   int ret = -1;
   if(!strcmp(p, "off")) {
-    // ret = IMP_AI_DisableAgc(); // Exception
+     ret = IMP_AI_DisableAgc(); // Exception
   } else {
     int targetLevelDbfs = atoi(p);
     p = strtok_r(NULL, " \t\r\n", &tokenPtr);
@@ -273,15 +272,14 @@ static uint32_t audio_encode_capture(int ch, struct frames_st *frames) {
     .stop_threshold = 0,
   };
 
-
 void audio_proc(int ch) {
     if(!audio_capture[ch].pcm) {
      if( access( productv22, F_OK ) == 0 ) {
          config.rate = 8000;
+	//put this in a function and call it instead of this
      }
       if( ch == 1 ) {
          config.rate = 8000;
-         fprintf(stderr, "[command] [audio_callback.c] LOG ch is %x\n", audio_capture[ch].callback);
 	}
          audio_capture[ch].pcm = pcm_open(audio_capture[ch].card, 1, PCM_OUT | PCM_MMAP, &config);
       if(audio_capture[ch].pcm == NULL) {

@@ -28,31 +28,31 @@ int PlayPCM(char *file, int vol) {
     0x02, 0x00, 0x10, 0x00, 0x64, 0x61, 0x74, 0x61
   };
 
-  fprintf(stderr, "[command] aplay: file:%s\n", file);
+  fprintf(stderr, "[command] [audio_play.c] file:%s\n", file);
   FILE *fp = fopen(file, "rb");
   if(fp == NULL) {
-    fprintf(stderr, "[command] aplay err: fopen %s failed!\n", file);
+    fprintf(stderr, "[command] [audio_play.c] fopen %s failed!\n", file);
     return -1;
   } else {
     size_t size = fread(buf, 1, waveHeaderLength, fp);
     if(size != waveHeaderLength) {
-      fprintf(stderr, "[command] aplay err: header size error\n");
+      fprintf(stderr, "[command] [audio_play.c] header size error\n");
     }
     buf[4] = buf[5] = buf[6] = buf[7] = 0;
     if(memcmp(buf, cmp, waveHeaderLength - 4)) {
-      fprintf(stderr, "[command] aplay err: header error\n");
+      fprintf(stderr, "[command] [audio_play.c] header error\n");
     }
     local_sdk_speaker_clean_buf_data();
     local_sdk_speaker_set_volume(vol);
 
  if(!local_sdk_speaker_set_pa_mode) {
     local_sdk_speaker_set_ap_mode(3);
-      fprintf(stderr, "[command] aplay: set ap mode 3\n");
+      fprintf(stderr, "[command] [audio_play.c] set ap mode 3\n");
   }
 
  if(!local_sdk_speaker_set_ap_mode) {
     local_sdk_speaker_set_pa_mode(3);
-      fprintf(stderr, "[command] aplay: set pa mode 3\n");
+      fprintf(stderr, "[command] [audio_play.c] set pa mode 3\n");
   }
 
 
@@ -75,7 +75,7 @@ int PlayPCM(char *file, int vol) {
   }
 
   }
-  fprintf(stderr, "[command] aplay: finish\n");
+  fprintf(stderr, "[command] [audio_play.c] finish\n");
   return 0;
 }
 
@@ -94,13 +94,13 @@ static void *AudioPlayThread() {
 char *AudioPlay(int fd, char *tokenPtr) {
 
   if(AudioPlayFd >= 0) {
-    fprintf(stderr, "[command] aplay err: Previous file is still playing. %d %d\n", AudioPlayFd, fd);
+    fprintf(stderr, "[command] [audio_play.c] Previous file is still playing. %d %d\n", AudioPlayFd, fd);
     return "[command] [audio_play.c] error";
   }
 
   char *p = strtok_r(NULL, " \t\r\n", &tokenPtr);
   if(!p) {
-    fprintf(stderr, "[command] aplay err: usage : aplay <wave file> [<volume>]\n");
+    fprintf(stderr, "[command] [audio_play.c] usage : aplay <wave file> [<volume>]\n");
     return "[command] [audio_play.c] error";
   }
   strncpy(waveFile, p, 255);

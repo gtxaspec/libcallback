@@ -31,9 +31,9 @@ static int NoHeader = 0;
 char *JpegCapture(int fd, char *tokenPtr) {
 
   if(JpegCaptureFd >= 0) {
-    fprintf(stderr, "[command] jpeg capture error %d %d\n", JpegCaptureFd, fd);
+    fprintf(stderr, "[command] [jpeg.c] capture error %d %d\n", JpegCaptureFd, fd);
     write(fd, HttpErrorHeader, strlen(HttpErrorHeader));
-    CommandResponse(fd, "error : jpeg capture error");
+    CommandResponse(fd, "[command] [jpeg.c] error : jpeg capture error");
     return NULL;
   }
   JpegCaptureFd = fd;
@@ -54,12 +54,12 @@ static int GetJpegData(int fd, int ch) {
 
   struct channelConfigSt *chConfig = get_enc_chn_config(ch);
   if (!chConfig->state) {
-    fprintf(stderr, "[command] jpeg err: ch%d is not enable jpeg!\n", ch);
+    fprintf(stderr, "[command] [jpeg.c] err: ch%d is not enable jpeg!\n", ch);
     return -1;
   }
   int state = get_video_run_state(ch);
   if (state < 5) {
-    fprintf(stderr, "[command] jpeg err: U should call 'video_run' before this func\n");
+    fprintf(stderr, "[command] [jpeg.c] err: You should call 'video_run' before this func\n");
     return -1;
   }
 
@@ -68,13 +68,13 @@ static int GetJpegData(int fd, int ch) {
   int ret = 0;
 
   if(IMP_Encoder_StartRecvPic(encoder) < 0) {
-    fprintf(stderr, "[command] jpeg err: IMP_Encoder_StartRecvPic(%d) failed\n", encoder);
+    fprintf(stderr, "[command] [jpeg.c] err: IMP_Encoder_StartRecvPic(%d) failed\n", encoder);
     ret = -1;
     goto error1;
   }
 
   if(IMP_Encoder_PollingStream(encoder, 2000) < 0) {
-    fprintf(stderr, "[command] jpeg err: Polling stream(chn%d) timeout\n", encoder);
+    fprintf(stderr, "[command] [jpeg.c] err: Polling stream(chn%d) timeout\n", encoder);
     ret = -1;
     goto error2;
   }
@@ -82,21 +82,21 @@ static int GetJpegData(int fd, int ch) {
   uint stream[17];
   memset(stream, 0, 60);
   if(IMP_Encoder_GetStream(encoder, stream, 1) < 0) {
-    fprintf(stderr, "[command] jpeg err: IMP_Encoder_GetStream(chn%d) failed\n", encoder);
+    fprintf(stderr, "[command] [jpeg.c] err: IMP_Encoder_GetStream(chn%d) failed\n", encoder);
     ret = -1;
     goto error2;
   }
 
   if(!NoHeader) write(fd, HttpResHeader, strlen(HttpResHeader));
   if(save_jpeg(fd, stream) < 0) {
-    fprintf(stderr, "[command] jpeg err: save_jpeg(%d) failed\n", fd);
+    fprintf(stderr, "[command] [jpeg.c] err: save_jpeg(%d) failed\n", fd);
     ret = -2;
   }
   IMP_Encoder_ReleaseStream(encoder, stream);
 
 error2:
   if(IMP_Encoder_StopRecvPic(encoder) < 0) {
-    fprintf(stderr, "[command] jpeg err: IMP_Encoder_StopRecvPic(chn%d) failed\n", encoder);
+    fprintf(stderr, "[command] [jpeg.c] err: IMP_Encoder_StopRecvPic(chn%d) failed\n", encoder);
   }
 
 error1:
@@ -119,11 +119,11 @@ static void *JpegCaptureThread() {
 
 static void __attribute ((constructor)) JpegInit(void) {
 
-  if(getppid() != 1) return;
+//  if(getppid() != 1) return;
   pthread_mutex_lock(&JpegDataMutex);
   pthread_t thread;
   if(pthread_create(&thread, NULL, JpegCaptureThread, NULL)) {
-    fprintf(stderr, "pthread_create error\n");
+    fprintf(stderr, "[command] [jpeg.c] pthread_create error\n");
     pthread_mutex_unlock(&JpegDataMutex);
     return;
   }

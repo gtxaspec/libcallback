@@ -25,10 +25,10 @@ char *mp4Write(int fd, char *tokenPtr) {
   }
   if(!strcmp(p, "off")) {
     mp4WriteEnable = 0;
-    fprintf(stderr, "[command] mp4write off\n", p);
+    fprintf(stderr, "[command] [mp4write.c] mp4write off\n", p);
     return "ok";
   }
-  return "error in [mp4write.c]";
+  return "[command] [mp4write.c] error!";
 }
 
 
@@ -49,7 +49,7 @@ if(mp4WriteEnable) {
       mkdir("/media/mmc/record/tmp", 0700);
     }
 
-  printf("[command] [mp4write.c]: filename: %s\n", file);
+  printf("[command] [mp4write.c]: writing video file to path: %s\n", file);
 
   if(!strncmp(file, "/tmp/alarm_", 11)) {
   printf("[command] [mp4write.c]: alarm, skipping\n", file);

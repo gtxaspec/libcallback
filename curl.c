@@ -71,19 +71,19 @@ char *CurlDebug(int fd, char *tokenPtr) {
   if(!p) return debug ? "on" : "off";
   if(!strcmp(p, "on")) {
     debug = 1;
-    printf("[curl] curl debug on\n", p);
+    printf("[command] [curl.c] curl debug on\n", p);
     return "ok";
   }
   if(!strcmp(p, "off")) {
     debug = 0;
-    printf("[curl] curl debug off\n", p);
+    printf("[command] [curl.c] curl debug off\n", p);
     return "ok";
   }
   return "error";
 }
 
 static void Dump(const char *str, void *start, int size) {
-  fprintf(stderr, "[curl] Dump %s\n", str);
+  fprintf(stderr, "[command] [curl.c] Dump %s\n", str);
   for(int i = 0; i < size; i+= 16) {
     char buf1[256];
     char buf2[256];
@@ -111,13 +111,13 @@ CURLcode curl_easy_perform(struct SessionHandle *data) {
 
   int method = data->httpreq;
   if(method > HTTPREQ_LAST) method = HTTPREQ_LAST;
-  printf("[curl] %s %s\n", methods[method], data->url);
-  if(debug) fprintf(stderr, "[curl] %s %s ra=0x%08x\n", methods[method], data->url, ra);
+  printf("[command] [curl.c] %s %s\n", methods[method], data->url);
+  if(debug) fprintf(stderr, "[command] [curl.c] %s %s ra=0x%08x\n", methods[method], data->url, ra);
   if(data->postfields) {
     if(data->postfieldsize > 0) {
-      if(debug) Dump("[curl] post", data->postfields, data->postfieldsize);
+      if(debug) Dump("[command] [curl.c] post", data->postfields, data->postfieldsize);
     } else {
-      if(debug) fprintf(stderr, "[curl] post : %s\n", data->postfields);
+      if(debug) fprintf(stderr, "[command] [curl.c] post : %s\n", data->postfields);
     }
   }
 
@@ -126,7 +126,7 @@ CURLcode curl_easy_perform(struct SessionHandle *data) {
     struct timeval now;
     gettimeofday(&now, NULL);
     if((curl_minimum_alarm_cycle < 0) || (now.tv_sec - lastAccess < curl_minimum_alarm_cycle)) {
-      printf("[curl] Dismiss short cycle alarms.\n");
+      printf("[command] [curl.c] Dismiss short cycle alarms.\n");
       memcpy(data->out, DummyRes, strlen(DummyRes));
       data->httpcode = 200;
       return CURL_OK;
@@ -137,13 +137,13 @@ CURLcode curl_easy_perform(struct SessionHandle *data) {
   }
 
   if(data->url && !strncmp(data->url, DummyHost, strlen(DummyHost))) {
-    printf("[curl] skip http-post.\n");
+    printf("[command] [curl.c] skip http-post.\n");
     data->httpcode = 200;
     return CURL_OK;
   }
 
   CURLcode res = original_curl_easy_perform(data);
-  if(data->out) printf("[curl] res : %s\n", data->out);
-  if(debug) fprintf(stderr, "[curl] ret: %d\n", res);
+  if(data->out) printf("[command] [curl.c] res : %s\n", data->out);
+  if(debug) fprintf(stderr, "[command] [curl.c] ret: %d\n", res);
   return res;
 }
