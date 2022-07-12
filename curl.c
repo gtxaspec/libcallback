@@ -55,14 +55,6 @@ static int debug = 0;
 
 static void __attribute ((constructor)) curl_hook_init(void) {
   original_curl_easy_perform = dlsym(dlopen("/thirdlib/libcurl.so", RTLD_LAZY), "curl_easy_perform");
-  char *p = getenv("MINIMIZE_ALARM_CYCLE");
-  if(p && !strcmp(p, "on")) {
-    curl_minimum_alarm_cycle = 300;
-  }
-  p = getenv("ATOMTECH_AWS_ACCESS");
-  if(p && !strcmp(p, "disable_video")) {
-    curl_minimum_alarm_cycle = -1;
-  }
 }
 
 char *CurlDebug(int fd, char *tokenPtr) {
@@ -77,6 +69,16 @@ char *CurlDebug(int fd, char *tokenPtr) {
   if(!strcmp(p, "off")) {
     debug = 0;
     printf("[command] [curl.c] curl debug off\n", p);
+    return "ok";
+  }
+  if(!strcmp(p, "minimize_alarm")) {
+    curl_minimum_alarm_cycle = 300;
+    printf("[command] [curl.c] minimize_alarm enabled\n", p);
+    return "ok";
+  }
+  if(!strcmp(p, "disable_video")) {
+     curl_minimum_alarm_cycle = -1;
+    printf("[command] [curl.c] curl video upload disabled\n", p);
     return "ok";
   }
   return "error";
@@ -95,7 +97,7 @@ static void Dump(const char *str, void *start, int size) {
       if((d < 0x20) || (d > 0x7f)) d = '.';
       sprintf(buf2 + j, "%c", d);
     }
-    fprintf(stderr, "%s %s\n", buf1, buf2);
+    fprintf(stderr, "[command] [curl.c] %s %s\n", buf1, buf2);
   }
 }
 
