@@ -388,7 +388,7 @@ const char *product_T20_platform="/opt/wz_mini/tmp/.T20";
 	//T31
 	if(ch == 0) {
 		video_capture[ch].device = "/dev/video1";
-		fprintf(stderr, "[command] v4l2_device_path = %s\n", video_capture[ch].device);
+		fprintf(stderr, "[command] [video_callback.c] v4l2_device_path = %s\n", video_capture[ch].device);
 
 		if( access( productDB, F_OK ) == 0 ) {
         	        /* doorbell resolution */
