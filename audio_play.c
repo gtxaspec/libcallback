@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "platform.h"
 
 extern int local_sdk_speaker_clean_buf_data();
 extern int local_sdk_speaker_set_volume(int volume);
@@ -23,6 +24,7 @@ static int Volume = 0;
 
 int PlayPCM(char *file, int vol) {
 
+  const char *product_T20="/opt/wz_mini/tmp/.T20";
   static const int waveHeaderLength = 44;
   static const int bufLength = 640;
   unsigned char buf[bufLength];
@@ -50,8 +52,14 @@ int PlayPCM(char *file, int vol) {
     }
     local_sdk_speaker_clean_buf_data();
     local_sdk_speaker_set_volume(vol);
-    set_pa_mode(3);
-      //Ignore the chunks
+
+     if( access( product_T20, F_OK ) != -1 ) {
+      fprintf(stderr, "[command] [audio_play.c] T20 detected, ignoring AP mode.\n");
+     } else {
+      set_pa_mode(3);
+     }
+
+    //Ignore the chunks
     //int chunkSize = (buf[43] << 24) | (buf[42] << 16) | (buf[41] << 8) | buf[40];
     while(!feof(fp)) {
       size = fread(buf, 1, bufLength, fp);
@@ -72,7 +80,12 @@ int PlayPCM(char *file, int vol) {
     }
     //Increase the sleep so the file doesn't abruptly end early
     usleep(2 * 1000 * 1000);
-    set_pa_mode(0);
+
+    if( access( product_T20, F_OK ) != -1 ) {
+     fprintf(stderr, "[command] [audio_play.c] T20 detected, ignoring AP mode.\n");
+    } else {
+     set_pa_mode(0);
+    }
   }
   return 0;
 }
@@ -96,11 +109,15 @@ char *AudioPlay(int fd, char *tokenPtr) {
     return "error";
   }
 
-  if(!set_pa_mode) {
+  if( access( product_T20, F_OK ) != -1 ) {
+   fprintf(stderr, "[command] [audio_play.c] T20 detected, skipping AP mode check.\n");
+  } else {
+   if(!set_pa_mode) {
     fprintf(stderr, "[command] [audio_play.c] aplay err: local_sdk_speaker_set_[ap]_mode not found.\n", AudioPlayFd, fd);
     return "error";
   }
 
+}
   char *p = strtok_r(NULL, " \t\r\n", &tokenPtr);
   if(!p) {
     fprintf(stderr, "[command] [audio_play.c] aplay err: usage : aplay <wave file> [<volume>]\n");
