@@ -353,12 +353,12 @@ char *VideoCapture(int fd, char *tokenPtr) {
   if(!p) return video_capture[ch].enable ? "on" : "off";
   if(!strcmp(p, "on")) {
     video_capture[ch].enable = 1;
-    printf("[command] [video_callback.c] video CH%d capture on\n", ch);
+    printf("[command] [video_callback.c] [CH%d] video capture on\n", ch);
     return "ok";
   }
   if(!strcmp(p, "off")) {
     video_capture[ch].enable = 0;
-    printf("[command] [video_callback.c] video CH%d capture off\n", ch);
+    printf("[command] [video_callback.c] [CH%d] video capture off\n", ch);
     return "ok";
   }
   return "error";
