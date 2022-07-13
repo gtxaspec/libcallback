@@ -65,15 +65,15 @@ int local_sdk_video_osd_update_rect(int ch, int display, struct RectInfoSt *rect
           tilt -= (rectInfo->top + rectInfo->bottom - 180 * 2) * 55 / (2 * 360);
           if(tilt < 45.0) tilt = 45.0;
           if(tilt > 180.0) tilt = 180.0;
-          sprintf(waitMotionResBuf, "[command] [wait_motion.c] detect %d %d %d %d %d %d\n",
+          sprintf(waitMotionResBuf, "detect %d %d %d %d %d %d\n",
             rectInfo->left, rectInfo->right, rectInfo->top, rectInfo->bottom, lroundf(pan), lroundf(tilt));
         } else {
-          sprintf(waitMotionResBuf, "[command] [wait_motion.c] detect %d %d %d %d - -\n",
+          sprintf(waitMotionResBuf, "detect %d %d %d %d - -\n",
             rectInfo->left, rectInfo->right, rectInfo->top, rectInfo->bottom);
         }
         CommandResponse(WaitMotionFd, waitMotionResBuf);
       } else {
-        CommandResponse(WaitMotionFd, "[command] [wait_motion.c] clear\n");
+        CommandResponse(WaitMotionFd, "clear\n");
       }
       pthread_cond_signal(&WaitMotionCond);
     }
@@ -92,7 +92,7 @@ static void *WaitMotionThread() {
       timeout.tv_sec = now.tv_sec + Timeout;
       timeout.tv_nsec = now.tv_usec * 1000;
       int ret = pthread_cond_timedwait(&WaitMotionCond, &WaitMotionMutex, &timeout);
-      if(ret == ETIMEDOUT) CommandResponse(WaitMotionFd, "[command] [wait_motion.c] timeout\n");
+      if(ret == ETIMEDOUT) CommandResponse(WaitMotionFd, "timeout\n");
     }
     WaitMotionFd = -1;
   }
@@ -100,6 +100,7 @@ static void *WaitMotionThread() {
 
 static void __attribute ((constructor)) osd_rect_hook_init(void) {
 
+//  if(getppid() != 1) return;
   original_local_sdk_video_osd_update_rect = dlsym(dlopen ("/system/lib/liblocalsdk.so", RTLD_LAZY), "local_sdk_video_osd_update_rect");
 
   pthread_mutex_lock(&WaitMotionMutex);

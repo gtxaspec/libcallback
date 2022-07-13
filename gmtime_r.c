@@ -3,8 +3,6 @@
 #include <time.h>
 #include <sys/time.h>
 
-//Need to keep this older version of gmtime_r.c, the new one removes a struct and breaks
-
 extern int MotorFd;
 extern struct timeval MotorLastMovedTime;
 
