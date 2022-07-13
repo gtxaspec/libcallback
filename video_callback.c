@@ -456,6 +456,8 @@ static int video1_encode_capture(struct frames_st *frames) {
 
 int local_sdk_video_set_encode_frame_callback(int ch, void *callback) {
 
+  fprintf(stderr, "[command] [video_callback.c] local_sdk_video_set_encode_frame_callback streamChId=%d, callback=0x%x\n", ch, callback);
+
   static int ch_count = 0;
 
 /* two callbacks for video stream 0 are typically detected, unknown what the difference is between them, but if they are both hooked, the app breaks. grab just one of them. */
