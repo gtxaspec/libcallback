@@ -283,7 +283,7 @@ const char *product_T20="/opt/wz_mini/tmp/.T20";
      }
       if( ch == 1 ) {
          config.rate = 8000;
-	}
+      }
          audio_capture[ch].pcm = pcm_open(audio_capture[ch].card, 1, PCM_OUT | PCM_MMAP, &config);
       if(audio_capture[ch].pcm == NULL) {
           fprintf(stderr, "[command] [audio_callback.c] failed to allocate memory for PCM%d\n", ch);
@@ -299,19 +299,20 @@ const char *product_T20="/opt/wz_mini/tmp/.T20";
         int err = pcm_writei(audio_capture[ch].pcm, frames->buf, pcm_bytes_to_frames(audio_capture[ch].pcm, frames->length));
         if(err < 0) fprintf(stderr, "[command] [audio_callback.c] [command] [audio_callback.c] pcm_writei ch%d err=%d\n", ch, err);
       } else {
-        fprintf(stderr, "[command] [audio_callback.c] drop packet: ch%d %d\n", ch, frames->length);
+        fprintf(stderr, "[command] [audio_callback.c] audio buffer full, dropping packet: ch%d %d\n", ch, frames->length);
         pcm_prepare(audio_capture[ch].pcm);
       }
     }
 }
 
-if( access( product_T20, F_OK ) == 0 ) {
-for(int ch = 0; ch < 2; ch++) {
-audio_proc(ch);
-}
-} else {
-audio_proc(ch);
-}
+    if( access( product_T20, F_OK ) == 0 ) {
+       for(int ch = 0; ch < 2; ch++) {
+        audio_proc(ch);
+       }
+    } else {
+       audio_proc(ch);
+    }
+
   return ((framecb)audio_capture[ch].callback)(frames);
 }
 
@@ -331,20 +332,22 @@ uint32_t local_sdk_audio_set_pcm_frame_callback(int ch, void *callback) {
 
   if( (ch == 0) && ch_count == 0) {
     audio_capture[ch].callback = callback;
-    fprintf(stderr, "[command] [audio_callback.c] [CH0] enc func injection save audio_encode_cb=0x%x\n", audio_capture[ch].callback);
+    fprintf(stderr, "[command] [audio_callback.c] [CH0] encoder function injection hook audio_encode_cb=0x%x\n", audio_capture[ch].callback);
     callback = audio_capture[ch].capture;
 }
+    fprintf(stderr,"[command] [audio_callback.c] channel counter is at %x\n", ch_count);
+
   if( (ch == 1) && ch_count == 1) {
     audio_capture[ch].callback = callback;
-    fprintf(stderr, "[command] [audio_callback.c] [CH1] enc func injection save audio_encode_cb=0x%x\n", audio_capture[ch].callback);
+    fprintf(stderr, "[command] [audio_callback.c] [CH1] encoder function injection hook audio_encode_cb=0x%x\n", audio_capture[ch].callback);
     callback = audio_capture[ch].capture;
 }
 
-//if V2 here, we have to latch on to the same callback as CH0, since the V2's only have one audio callback
+//T20 only, we have to latch on to the same callback as CH0, since the T20's only have one audio callback
  if( access( product_T20, F_OK ) == 0 ) {
   if( (ch == 0) && ch_count == 1) {
     audio_capture[1].callback = callback;
-    fprintf(stderr, "[command] [audio_callback.c] [CH0-1] enc func injection second callback for V2 save audio_pcm_cb=0x%x\n", audio_capture[1].callback);
+    fprintf(stderr, "[command] [audio_callback.c] [CH0-1] encoder function injection second callback for V2 hook audio_pcm_cb=0x%x\n", audio_capture[1].callback);
     callback = audio_capture[1].callback;
     ch =1;
   }

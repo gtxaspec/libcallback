@@ -368,52 +368,52 @@ static int video_encode_capture(int ch, struct frames_st *frames) {
 
 const char *product_T31="/opt/wz_mini/tmp/.T31";
 const char *product_T20="/opt/wz_mini/tmp/.T20";
+const char *product_DB3="/opt/wz_mini/tmp/.WYZEDB3";
 
   if(!video_capture[ch].initialized) {
     video_capture[ch].initialized = 1;
     int err;
 
     //Check for T20 & DOORBELL
-    const char *productDB3="/opt/wz_mini/tmp/.WYZEDB3";
 
     if( access( product_T20, F_OK ) != -1 ) {
 	//T20
 	if(ch == 0) {
 		video_capture[ch].device = "/dev/video6";
-        	fprintf(stderr, "[command] [video_callback.c] v4l2_device_path = %s\n", video_capture[ch].device);
+        	fprintf(stderr, "[command] [video_callback.c] [CH0] v4l2_device_path = %s\n", video_capture[ch].device);
 	} else if(ch == 1) {
 		video_capture[ch].device = "/dev/video7";
-        	fprintf(stderr, "[command] [video_callback.c] v4l2_device_path = %s\n", video_capture[ch].device);
+        	fprintf(stderr, "[command] [video_callback.c] [CH1] v4l2_device_path = %s\n", video_capture[ch].device);
 	}
     } else {
 	//T31
 	if(ch == 0) {
 		video_capture[ch].device = "/dev/video1";
-		fprintf(stderr, "[command] [video_callback.c] v4l2_device_path = %s\n", video_capture[ch].device);
+		fprintf(stderr, "[command] [video_callback.c] [CH0] v4l2_device_path = %s\n", video_capture[ch].device);
 
-		if( access( productDB3, F_OK ) == 0 ) {
+		if( access( product_DB3, F_OK ) == 0 ) {
         	        /* doorbell resolution */
-                	printf("[command] [video_callback.c] video product 1728x1296\n");
+                	printf("[command] [video_callback.c] [CH0] video resolution 1728x1296\n");
 	                video_capture[ch].width = 1728;
         	        video_capture[ch].height = 1296;
 		} else {
         	        /* v3 and panv2 res */
-	                printf("[command] [video_callback.c] video product 1920x1080\n");
+	                printf("[command] [video_callback.c] [CH0] video resolution 1920x1080\n");
         	        video_capture[ch].width = 1920;
                 	video_capture[ch].height = 1080;
 		}
 	} else if(ch == 1) {
 		video_capture[ch].device = "/dev/video2";
-        	fprintf(stderr, "[command] [video_callback.c] v4l2_device_path = %s\n", video_capture[ch].device);
+        	fprintf(stderr, "[command] [video_callback.c] [CH1] v4l2_device_path = %s\n", video_capture[ch].device);
 
-		if( access( productDB3, F_OK ) == 0 ) {
+		if( access( product_DB3, F_OK ) == 0 ) {
 	       	        /* doorbell resolution */
-                	printf("[command] [video_callback.c] video product 640x480\n");
+                	printf("[command] [video_callback.c] [CH1] video resolution 640x480\n");
 	                video_capture[ch].width = 640;
         	        video_capture[ch].height = 480;
 		} else {
         	        /* v3 and panv2 res */
-	                printf("[command] [video_callback.c] video product 640x360\n");
+	                printf("[command] [video_callback.c] [CH1] video resolution 640x360\n");
         	        video_capture[ch].width = 640;
                 	video_capture[ch].height = 360;
 		}
@@ -462,15 +462,15 @@ int local_sdk_video_set_encode_frame_callback(int ch, void *callback) {
   //stream 0
   if( (ch == 0) && ch_count == 2) {
     video_capture[ch].callback = callback;
-    fprintf(stderr,"[command] [video_callback.c] enc func injection save video_encode_cb=0x%x\n", video_capture[ch].callback);
+    fprintf(stderr,"[command] [video_callback.c] [CH0] encoder function injection hook video_encode_cb=0x%x\n", video_capture[ch].callback);
     callback = video_capture[ch].capture;
   }
-    fprintf(stderr,"[command] [video_callback.c] ch count is %x\n", ch_count);
+    fprintf(stderr,"[command] [video_callback.c] channel counter is at %x\n", ch_count);
 
   //stream 1
   if( (ch == 1) && ch_count == 1) {
     video_capture[ch].callback = callback;
-    fprintf(stderr,"[command] [video_callback.c] enc func injection save video_encode_cb=0x%x\n", video_capture[ch].callback);
+    fprintf(stderr,"[command] [video_callback.c] [CH1] encoder function injection hook video_encode_cb=0x%x\n", video_capture[ch].callback);
     callback = video_capture[ch].capture;
   }
 
