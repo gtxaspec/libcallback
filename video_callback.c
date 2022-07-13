@@ -10,6 +10,7 @@
 #include <sys/ioctl.h>
 #include <sys/time.h>
 #include <pthread.h>
+#include "platform.h"
 
 // contrast of image effect.
 extern int IMP_ISP_Tuning_SetContrast(unsigned char contrast);
@@ -365,17 +366,17 @@ char *VideoCapture(int fd, char *tokenPtr) {
 
 static int video_encode_capture(int ch, struct frames_st *frames) {
 
-const char *product_T31_platform="/opt/wz_mini/tmp/.T31";
-const char *product_T20_platform="/opt/wz_mini/tmp/.T20";
+const char *product_T31="/opt/wz_mini/tmp/.T31";
+const char *product_T20="/opt/wz_mini/tmp/.T20";
 
   if(!video_capture[ch].initialized) {
     video_capture[ch].initialized = 1;
     int err;
 
     //Check for T20 & DOORBELL
-    const char *productDB="/opt/wz_mini/tmp/.WYZEDB3";
+    const char *productDB3="/opt/wz_mini/tmp/.WYZEDB3";
 
-    if( access( product_T20_platform, F_OK ) != -1 ) {
+    if( access( product_T20, F_OK ) != -1 ) {
 	//T20
 	if(ch == 0) {
 		video_capture[ch].device = "/dev/video6";
@@ -390,7 +391,7 @@ const char *product_T20_platform="/opt/wz_mini/tmp/.T20";
 		video_capture[ch].device = "/dev/video1";
 		fprintf(stderr, "[command] [video_callback.c] v4l2_device_path = %s\n", video_capture[ch].device);
 
-		if( access( productDB, F_OK ) == 0 ) {
+		if( access( productDB3, F_OK ) == 0 ) {
         	        /* doorbell resolution */
                 	printf("[command] [video_callback.c] video product 1728x1296\n");
 	                video_capture[ch].width = 1728;
@@ -405,7 +406,7 @@ const char *product_T20_platform="/opt/wz_mini/tmp/.T20";
 		video_capture[ch].device = "/dev/video2";
         	fprintf(stderr, "[command] [video_callback.c] v4l2_device_path = %s\n", video_capture[ch].device);
 
-		if( access( productDB, F_OK ) == 0 ) {
+		if( access( productDB3, F_OK ) == 0 ) {
 	       	        /* doorbell resolution */
                 	printf("[command] [video_callback.c] video product 640x480\n");
 	                video_capture[ch].width = 640;

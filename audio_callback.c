@@ -9,6 +9,7 @@
 #include <sys/ioctl.h>
 #include <sys/time.h>
 #include <tinyalsa/pcm.h>
+#include "platform.h"
 
 static const int AudioDecviceID = 1;
 static const int AudioChID = 0;
@@ -254,7 +255,6 @@ char *AudioCapture(int fd, char *tokenPtr) {
   return "error";
 }
 ////////
- const char *productv22="/driver/sensor_jxf23.ko";
 
 static uint32_t audio_encode_capture(int ch, struct frames_st *frames) {
 
@@ -273,8 +273,11 @@ static uint32_t audio_encode_capture(int ch, struct frames_st *frames) {
   };
 
 void audio_proc(int ch) {
+
+const char *product_T20="/opt/wz_mini/tmp/.T20";
+
     if(!audio_capture[ch].pcm) {
-     if( access( productv22, F_OK ) == 0 ) {
+     if( access( product_T20, F_OK ) == 0 ) {
          config.rate = 8000;
 	//put this in a function and call it instead of this
      }
@@ -302,7 +305,7 @@ void audio_proc(int ch) {
     }
 }
 
-if( access( productv22, F_OK ) == 0 ) {
+if( access( product_T20, F_OK ) == 0 ) {
 for(int ch = 0; ch < 2; ch++) {
 audio_proc(ch);
 }
@@ -338,7 +341,7 @@ uint32_t local_sdk_audio_set_pcm_frame_callback(int ch, void *callback) {
 }
 
 //if V2 here, we have to latch on to the same callback as CH0, since the V2's only have one audio callback
- if( access( productv22, F_OK ) == 0 ) {
+ if( access( product_T20, F_OK ) == 0 ) {
   if( (ch == 0) && ch_count == 1) {
     audio_capture[1].callback = callback;
     fprintf(stderr, "[command] [audio_callback.c] [CH0-1] enc func injection second callback for V2 save audio_pcm_cb=0x%x\n", audio_capture[1].callback);

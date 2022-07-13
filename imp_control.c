@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "platform.h"
 
 extern int IMP_AI_DisableHpf();
 extern int IMP_AI_DisableAgc();
@@ -48,10 +49,9 @@ extern int IMP_ISP_Tuning_SetBacklightComp();
 extern int IMP_ISP_Tuning_SetDPStrength();
 extern int IMP_ISP_Tuning_SetISPHflip();
 extern int IMP_ISP_Tuning_SetISPVflip();
+//const char *product_T20="/opt/wz_mini/tmp/.T20";
 
 extern void CommandResponse(int fd, const char *res);
-
-const char *productv2="/driver/sensor_jxf23.ko";
 
 char *imp_Control(int fd, char *tokenPtr) {
 
@@ -129,7 +129,7 @@ int fps_den = 1;
 	IMP_AO_SetVol(AO_devID,AO_chnID,ao_vol);
   } else if(!strcmp(p, "flip_mirror")) {
 	IMP_ISP_EnableTuning();
-	if( access( productv2, F_OK ) != -1 ) {
+	if( access( product_T20, F_OK ) != -1 ) {
 		IMP_ISP_Tuning_SetISPHflip(0);
 		IMP_ISP_Tuning_SetISPVflip(0);
 	} else {
@@ -137,21 +137,21 @@ int fps_den = 1;
 	}
   } else if(!strcmp(p, "flip_vertical")) {
 	IMP_ISP_EnableTuning();
- 	if( access( productv2, F_OK ) != -1 ) {
+ 	if( access( product_T20, F_OK ) != -1 ) {
 		IMP_ISP_Tuning_SetISPVflip(0);
 	} else {
 		IMP_ISP_Tuning_SetHVFLIP(1);
 	}
   } else if(!strcmp(p, "flip_horizontal")) {
 	IMP_ISP_EnableTuning();
-	if( access( productv2, F_OK ) != -1 ) {
+	if( access( product_T20, F_OK ) != -1 ) {
 		IMP_ISP_Tuning_SetISPHflip(0);
 	} else {
 		IMP_ISP_Tuning_SetHVFLIP(2);
 	}
   } else if(!strcmp(p, "flip_normal")) {
 	IMP_ISP_EnableTuning();
-	if( access( productv2, F_OK ) != -1 ) {
+	if( access( product_T20, F_OK ) != -1 ) {
 		IMP_ISP_Tuning_SetISPHflip(1);
 		IMP_ISP_Tuning_SetISPVflip(1);
 	} else {
@@ -210,7 +210,7 @@ int fps_den = 1;
   } else if(!strcmp(p, "tune_aeitmax")) {
         p = strtok_r(NULL, " \t\r\n", &tokenPtr);
         if(p) aeitmax_val = atoi(p);
-	if( access( productv2, F_OK ) != -1 ) {
+	if( access( product_T20, F_OK ) != -1 ) {
 		return "not supported on v2";
 	} else {
 		IMP_ISP_EnableTuning();
@@ -220,7 +220,7 @@ int fps_den = 1;
   } else if(!strcmp(p, "tune_dpc_strength")) {
         p = strtok_r(NULL, " \t\r\n", &tokenPtr);
         if(p) dpc_val = atoi(p);
-	if( access( productv2, F_OK ) != -1 ) {
+	if( access( product_T20, F_OK ) != -1 ) {
 		return "not supported on v2";
 	} else {
 		IMP_ISP_EnableTuning();
@@ -230,7 +230,7 @@ int fps_den = 1;
   } else if(!strcmp(p, "tune_drc_strength")) {
         p = strtok_r(NULL, " \t\r\n", &tokenPtr);
         if(p) drc_val = atoi(p);
-	if( access( productv2, F_OK ) != -1 ) {
+	if( access( product_T20, F_OK ) != -1 ) {
 		return "not supported on v2";
 	} else {
 		IMP_ISP_EnableTuning();
@@ -270,7 +270,7 @@ int fps_den = 1;
   } else if(!strcmp(p, "tune_backlightcomp")) {
         p = strtok_r(NULL, " \t\r\n", &tokenPtr);
         if(p) bcomp_val = atoi(p);
-	if( access( productv2, F_OK ) != -1 ) {
+	if( access( product_T20, F_OK ) != -1 ) {
 		return "not supported on v2";
 	} else {
 		IMP_ISP_EnableTuning();
@@ -280,7 +280,7 @@ int fps_den = 1;
   } else if(!strcmp(p, "tune_dps")) {
         p = strtok_r(NULL, " \t\r\n", &tokenPtr);
         if(p) dps_val = atoi(p);
-	if( access( productv2, F_OK ) != -1 ) {
+	if( access( product_T20, F_OK ) != -1 ) {
 		IMP_ISP_EnableTuning();
 		IMP_ISP_Tuning_SetDPStrength(dps_val);
 	} else {

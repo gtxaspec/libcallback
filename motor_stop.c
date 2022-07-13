@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdint.h>
+#include "platform.h"
 
 const char *enableMotorStop="/opt/wz_mini/tmp/.ms";
 const char *product_T20="/opt/wz_mini/tmp/.T20";
