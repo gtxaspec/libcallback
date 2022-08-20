@@ -5,7 +5,7 @@
 #include <string.h>
 
 struct channelConfigSt {
-  uint dummy[4];
+  uint dummy[3];
   int state;
   int encoder;
 };
